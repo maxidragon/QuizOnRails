@@ -1,0 +1,64 @@
+name: Test
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+jobs:
+  test_frontend:
+    name: Frontend
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [19.x]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache-dependency-path: "frontend"
+      - name: Install dependencies
+        working-directory: 'frontend' 
+        run: npm ci
+      - name: Run ESlint
+        working-directory: 'frontend'
+        run: npm run lint
+      - name: Check formatting
+        working-directory: 'frontend'
+        run: npm run format-check
+      - name: Build frontend
+        working-directory: 'frontend' 
+        run: npm run build
+      - name: Run tests
+        working-directory: 'frontend'
+        run: npm run test:no-watch
+
+  test_backend:
+    name: Backend
+    runs-on: ubuntu-latest
+    env:
+      RACK_ENV: test
+      RAILS_ENV: test
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          working-directory: backend
+          bundler-cache: true 
+      - uses: actions/cache@v3
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-node_modules-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-node_modules
+      - name: Activate MySQL
+        run: |
+          sudo systemctl start mysql.service
+      - name: Run tests
+        id: rspec
+        run: bundle exec rake
