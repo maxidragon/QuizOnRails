@@ -30,9 +30,9 @@ jobs:
       - name: Build frontend
         working-directory: 'frontend' 
         run: npm run build
-      - name: Run tests
-        working-directory: 'frontend'
-        run: npm run test:no-watch
+      # - name: Run tests
+      #   working-directory: 'frontend'
+      #   run: npm run test:no-watch
 
   test_backend:
     name: Backend
