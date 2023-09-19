@@ -10,7 +10,9 @@ Rails.application.routes.draw do
   }
   resources :quizzes do
     resources :questions do
-      resources :answers 
+      resources :answers do 
+        resources :user_answers
+      end
     end
   end
 end
