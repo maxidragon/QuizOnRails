@@ -1,6 +1,6 @@
 # QuizOnRails
 
-QuizOnRails is a simple quiz app built with Rails API (MySQL database) and React. 
+QuizOnRails is a simple quiz app built with Rails API and React. In the production environment, the application uses the MySQL database, in the development SQLite.
 
 # Development
 
