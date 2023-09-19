@@ -25,6 +25,7 @@ class AnswersController < ApplicationController
         else
             render json: {error: "Question not found"}, status: :not_found
         end
+    end
 
     def update
         answer = Answer.find(params[:id])
