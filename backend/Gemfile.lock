@@ -136,6 +136,8 @@ GEM
       stringio
     puma (6.3.1)
       nio4r (~> 2.0)
+    pundit (2.3.1)
+      activesupport (>= 3.0.0)
     racc (1.7.1)
     rack (2.2.8)
     rack-cors (2.0.1)
@@ -206,6 +208,7 @@ DEPENDENCIES
   devise-jwt
   jsonapi-serializer
   puma (~> 6.3)
+  pundit
   rack-cors
   rails (~> 7.0.8)
   sqlite3 (~> 1.4)
