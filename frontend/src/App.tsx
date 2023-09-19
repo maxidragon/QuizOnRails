@@ -6,7 +6,6 @@ import { ConfirmProvider } from "material-ui-confirm";
 import Register from "./Pages/Auth/Register/Register";
 import Login from "./Pages/Auth/Login/Login";
 
-
 const router = createHashRouter([
   {
     path: "/auth/login",

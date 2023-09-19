@@ -30,7 +30,7 @@ const Copyright = () => {
           href="https://github.com/maxidragon/QuizOnRails"
           target="_blank"
         >
-          <GitHubIcon sx={{ color: "#FFF" }} fontSize="large" />
+          <GitHubIcon sx={{ color: "#000" }} fontSize="large" />
         </IconButton>
       </Typography>
     </>

@@ -4,7 +4,7 @@ export const backendRequest = (
   path: string,
   method: string,
   useAuth: boolean,
-  body?: unknown
+  body?: unknown,
 ) => {
   const token = localStorage.getItem("token");
   const headers = new Headers();

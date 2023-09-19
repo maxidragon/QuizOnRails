@@ -3,7 +3,7 @@ import { backendRequest } from "./request";
 export const registerUser = async (
   email: FormDataEntryValue | null,
   username: FormDataEntryValue | null,
-  password: FormDataEntryValue | null
+  password: FormDataEntryValue | null,
 ) => {
   try {
     const body = {
@@ -21,7 +21,7 @@ export const registerUser = async (
 };
 export const login = async (
   email: FormDataEntryValue | null,
-  password: FormDataEntryValue | null
+  password: FormDataEntryValue | null,
 ) => {
   try {
     const response = await backendRequest("login", "POST", false, {
@@ -33,7 +33,7 @@ export const login = async (
     if (response.status === 200) {
       const headers: [string, string][] = [...response.headers];
       const authorizationHeader = headers.find(
-        (header) => header[0] === "authorization"
+        (header) => header[0] === "authorization",
       );
       if (!authorizationHeader) throw new Error("No authorization header");
       const token = authorizationHeader[1].split(" ")[1];

@@ -33,7 +33,7 @@ export default function Register() {
         });
         navigate("/auth/login");
       } else if (message.status && !message.data) {
-        enqueueSnackbar(message.status.message, { variant: "error" });  
+        enqueueSnackbar(message.status.message, { variant: "error" });
       } else {
         enqueueSnackbar("Something went wrong", { variant: "error" });
       }
