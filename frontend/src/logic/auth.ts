@@ -48,3 +48,7 @@ export const login = async (
 export const logout = async () => {
   localStorage.removeItem("token");
 };
+
+export const isUserLoggedIn = () => {
+  return localStorage.getItem("token") !== null;
+};
