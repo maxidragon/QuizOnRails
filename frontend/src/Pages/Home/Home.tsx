@@ -1,27 +1,47 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Box, CircularProgress, TextField, Typography } from "@mui/material";
 import { Quiz } from "../../logic/interfaces";
 import { getQuizzes } from "../../logic/quizzes";
 import QuizCard from "../../Components/CardComponents/QuizCard";
+import PaginationFooter from "../../Components/Pagination/PaginationFooter";
 
 const Home = () => {
+  const [perPage, setPerPage] = useState(10);
   const [quizzes, setQuizzes] = useState<Quiz[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalItems, setTotalItems] = useState(0);
 
-  const fetchQuizzes = async (searchParam?: string) => {
-    const response = await getQuizzes(searchParam);
-    setQuizzes(response);
-    setLoading(false);
-  };
+  const fetchQuizzes = useCallback(
+    async (searchParam?: string, pageParam: number = 1, perPageParam: number = 10) => {
+      const response = await getQuizzes(searchParam, pageParam, perPageParam);
+      setQuizzes(response.quizzes);
+      setTotalPages(response.total_pages);
+      setTotalItems(response.total_items);
+      setLoading(false);
+    },
+    []
+  );
   const handleSearch = async (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(event.target.value);
-    fetchQuizzes(event.target.value);
+    fetchQuizzes(event.target.value, 1, perPage);
+  };
+
+  const handlePageChange = async (pageParam: number) => {
+    setPage(pageParam);
+    const response = await getQuizzes(search, pageParam, perPage);
+    setQuizzes(response);
   };
 
   useEffect(() => {
-    fetchQuizzes();
-  }, []);
+    setTotalPages(1);
+    setTotalItems(0);
+    setPerPage(10); //remove it
+    setPage(1);
+    fetchQuizzes("", 1);
+  }, [fetchQuizzes]);
 
   return (
     <>
@@ -60,6 +80,12 @@ const Home = () => {
             ))}
           </>
         )}
+        <PaginationFooter
+          page={page}
+          totalPages={totalPages}
+          totalItems={totalItems}
+          handlePageChange={handlePageChange}
+        />
       </Box>
     </>
   );

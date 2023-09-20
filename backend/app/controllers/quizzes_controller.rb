@@ -4,7 +4,7 @@ class QuizzesController < ApplicationController
 
     def index
         page = params[:page] || 1
-        per_page = params[:per_page] || 10  # Liczba wyników na stronę (możesz dostosować)
+        per_page = params[:per_page] || 10 
       
         if params[:search] && params[:search] != ""
           quizzes = Quiz.where("name LIKE ? OR description LIKE ?", "%#{params[:search]}%", "%#{params[:search]}%")
@@ -18,7 +18,8 @@ class QuizzesController < ApplicationController
         render json: {
           quizzes: quizzes,
           current_page: page.to_i,
-          total_pages: total_pages
+          total_pages: total_pages,
+          total_items: quizzes.total_entries
         }
       end
 
