@@ -2,7 +2,9 @@ export interface Quiz {
   id: number;
   name: string;
   description: string;
-  questions: Question[];
+  is_public: boolean;
+  created_at: string;
+  updated_at: string;
 }
 
 export interface Question {

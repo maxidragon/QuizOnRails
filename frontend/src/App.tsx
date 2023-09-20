@@ -7,6 +7,8 @@ import Layout from "./Layout/Layout";
 import Register from "./Pages/Auth/Register/Register";
 import Login from "./Pages/Auth/Login/Login";
 import Home from "./Pages/Home/Home";
+import ManageQuiz from "./Pages/ManageQuiz/ManageQuiz";
+import ErrorElement from "./Pages/ErrorElement/ErrorElement";
 
 const router = createHashRouter([
   {
@@ -20,6 +22,18 @@ const router = createHashRouter([
   {
     path: "/auth/register",
     element: <Register />,
+  },
+  {
+    path: "/quiz/:id/manage",
+    element: <Layout children={<ManageQuiz />} />,
+  },
+  {
+    path: "/error",
+    element: <Layout children={<ErrorElement message="Something went wrong!" />} />,
+  },
+  {
+    path: "*",
+    element: <Layout children={<ErrorElement message="404 not found" />} />,
   },
 ]);
 

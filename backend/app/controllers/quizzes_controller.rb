@@ -1,5 +1,5 @@
 class QuizzesController < ApplicationController
-    before_action :authenticate_user!, except: [:index, :show]
+    before_action :authenticate_user!, except: [:index]
     before_action :set_quiz, only: [:update, :destroy]
 
     def index
@@ -25,7 +25,11 @@ class QuizzesController < ApplicationController
 
     def show
         quiz = Quiz.find(params[:id])
-        render json: quiz
+        render json: {
+            quiz: quiz,
+            questions: quiz.questions,
+            can_manage: quiz_belongs_to_current_user?(quiz)
+        }
     end
 
     def create
@@ -43,8 +47,12 @@ class QuizzesController < ApplicationController
 
     def update
         if quiz_belongs_to_current_user?
+            quiz_params = params.require(:quiz).permit(:name, :description, :is_public)
             if @quiz.update(quiz_params)
-                render json: @quiz
+                render json: {
+                    quiz: @quiz,
+                    status: :updated
+                }
             else
                 render json: {error: @quiz.errors.full_messages}, status: :unprocessable_entity
             end
@@ -56,7 +64,10 @@ class QuizzesController < ApplicationController
     def destroy
         if quiz_belongs_to_current_user?
             @quiz.destroy
-            render json: @quiz
+            render json: {
+                quiz: @quiz,
+                status: :deleted
+            }
         else
             render json: {error: "You don't have permission to delete this quiz."}, status: :unauthorized
         end
@@ -68,8 +79,10 @@ class QuizzesController < ApplicationController
         @quiz = Quiz.find(params[:id])
     end
 
-    def quiz_belongs_to_current_user?
-        @quiz.user == current_user
+    def quiz_belongs_to_current_user?(quiz = @quiz)
+        puts "quiz.user: #{quiz.user}"
+        puts "current_user: #{current_user}"
+        quiz.user == current_user
     end
 
     
