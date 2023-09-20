@@ -20,7 +20,6 @@ export const getQuizzes = async (
 
 export const createQuiz = async (name: string, description: string) => {
   try {
-    
     const response = await backendRequest("quizzes", "POST", true, {
       name,
       description,
@@ -46,7 +45,12 @@ export const updateQuiz = async (quiz: Quiz) => {
     if (!quiz.is_public) {
       quiz.is_public = false;
     }
-    const response = await backendRequest(`quizzes/${quiz.id}`, "PUT", true, quiz);
+    const response = await backendRequest(
+      `quizzes/${quiz.id}`,
+      "PUT",
+      true,
+      quiz,
+    );
     return await response.json();
   } catch (error) {
     console.log(error);
@@ -61,4 +65,3 @@ export const deleteQuiz = async (id: number) => {
     console.log(error);
   }
 };
-

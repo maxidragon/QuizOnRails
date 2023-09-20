@@ -34,21 +34,22 @@ const EditQuizInfoForm = (props: {
 
   const handleDelete = () => {
     confirm({
-        description: "Are you sure you want to delete this quiz?",
-        }).then(async () => {
-            const response = await deleteQuiz(props.quiz.id);
-            if (response.status === "deleted") {
-                enqueueSnackbar("Quiz deleted!", { variant: "success" });
-                navigate("/")
-            }
-            if (response.error) {
-                enqueueSnackbar("Something went wrong!", { variant: "error" });
-                enqueueSnackbar(response.error, { variant: "error" });
-            }
+      description: "Are you sure you want to delete this quiz?",
+    })
+      .then(async () => {
+        const response = await deleteQuiz(props.quiz.id);
+        if (response.status === "deleted") {
+          enqueueSnackbar("Quiz deleted!", { variant: "success" });
+          navigate("/");
         }
-    ).catch(() => {
+        if (response.error) {
+          enqueueSnackbar("Something went wrong!", { variant: "error" });
+          enqueueSnackbar(response.error, { variant: "error" });
+        }
+      })
+      .catch(() => {
         enqueueSnackbar("Quiz not deleted!", { variant: "error" });
-    });
+      });
   };
 
   return (

@@ -32,7 +32,7 @@ const ManageQuiz = () => {
   questions?.forEach((question) => {
     console.log(question);
   });
-  
+
   const updateQuiz = (quiz: Quiz) => {
     setQuiz(quiz);
   };

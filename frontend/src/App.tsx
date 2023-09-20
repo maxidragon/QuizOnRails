@@ -29,7 +29,9 @@ const router = createHashRouter([
   },
   {
     path: "/error",
-    element: <Layout children={<ErrorElement message="Something went wrong!" />} />,
+    element: (
+      <Layout children={<ErrorElement message="Something went wrong!" />} />
+    ),
   },
   {
     path: "*",
