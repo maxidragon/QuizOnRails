@@ -1,9 +1,16 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { Box, CircularProgress, TextField, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  CircularProgress,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { Quiz } from "../../logic/interfaces";
 import { getQuizzes } from "../../logic/quizzes";
 import QuizCard from "../../Components/CardComponents/QuizCard";
 import PaginationFooter from "../../Components/Pagination/PaginationFooter";
+import CreateQuizModal from "../../Components/ModalComponents/Create/CreateQuizModal";
 
 const Home = () => {
   const [perPage, setPerPage] = useState(10);
@@ -13,16 +20,21 @@ const Home = () => {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [totalItems, setTotalItems] = useState(0);
+  const [openCreateModal, setOpenCreateModal] = useState(false);
 
   const fetchQuizzes = useCallback(
-    async (searchParam?: string, pageParam: number = 1, perPageParam: number = 10) => {
+    async (
+      searchParam?: string,
+      pageParam: number = 1,
+      perPageParam: number = 10,
+    ) => {
       const response = await getQuizzes(searchParam, pageParam, perPageParam);
       setQuizzes(response.quizzes);
       setTotalPages(response.total_pages);
       setTotalItems(response.total_items);
       setLoading(false);
     },
-    []
+    [],
   );
   const handleSearch = async (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(event.target.value);
@@ -43,6 +55,10 @@ const Home = () => {
     fetchQuizzes("", 1);
   }, [fetchQuizzes]);
 
+  const handleCloseCreateModal = () => {
+    setOpenCreateModal(false);
+    fetchQuizzes("", 1);
+  };
   return (
     <>
       <Box
@@ -62,6 +78,13 @@ const Home = () => {
           value={search}
           onChange={handleSearch}
         />
+        <Button
+          variant="contained"
+          sx={{ mt: 2 }}
+          onClick={() => setOpenCreateModal(true)}
+        >
+          Create a new quiz
+        </Button>
       </Box>
       <Box
         sx={{
@@ -85,6 +108,10 @@ const Home = () => {
           totalPages={totalPages}
           totalItems={totalItems}
           handlePageChange={handlePageChange}
+        />
+        <CreateQuizModal
+          open={openCreateModal}
+          handleClose={handleCloseCreateModal}
         />
       </Box>
     </>

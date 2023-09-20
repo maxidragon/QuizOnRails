@@ -29,9 +29,13 @@ class QuizzesController < ApplicationController
     end
 
     def create
+        quiz_params = params.require(:quiz).permit(:name, :description)
         quiz = current_user.quizzes.build(quiz_params)
         if quiz.save
-            render json: quiz
+            render json: {
+                quiz: quiz,
+                status: :created
+            }
         else
             render json: {error: quiz.errors.full_messages}, status: :unprocessable_entity
         end

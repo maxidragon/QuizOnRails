@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_09_20_143525) do
+ActiveRecord::Schema[7.0].define(version: 2023_09_20_154155) do
   create_table "answers", force: :cascade do |t|
     t.string "text"
     t.boolean "is_correct"
@@ -34,6 +34,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_20_143525) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.text "description"
+    t.boolean "is_public"
     t.index ["user_id"], name: "index_quizzes_on_user_id"
   end
 
