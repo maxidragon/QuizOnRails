@@ -2,7 +2,11 @@ class QuizzesController < ApplicationController
     before_action :authenticate_user!
 
     def index
-        quizzes = current_user.quizzes
+        if params[:search] && params[:search] != ""
+            quizzes = Quiz.where("title LIKE ?", "%#{params[:search]}%")
+        else
+            quizzes = Quiz.all
+        end
         render json: quizzes
     end
 
