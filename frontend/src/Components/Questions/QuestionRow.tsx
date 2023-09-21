@@ -22,6 +22,7 @@ import AddIcon from "@mui/icons-material/Add";
 import EditQuestionModal from "../ModalComponents/Edit/EditQuestionModal";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import AnswerRow from "./AnswerRow";
 
 const QuestionRow = (props: {
   row: Question;
@@ -31,7 +32,7 @@ const QuestionRow = (props: {
   const confirm = useConfirm();
   const { row } = props;
   const [hide, setHide] = useState<boolean>(false);
-  const [editedQuestion, setEditedQuestion] = useState<Question>(props.row);
+  const [editedQuestion, setEditedQuestion] = useState<Question>(row);
   const [open, setOpen] = useState(false);
   const [openCreateModal, setOpenCreateModal] = useState<boolean>(false);
   const [openEditQuestionModal, setOpenEditQuestionModal] =
@@ -137,21 +138,12 @@ const QuestionRow = (props: {
                     </TableHead>
                     <TableBody>
                       {row.answers.map((answerRow, answerNumber: number) => (
-                        <TableRow key={answerRow.id}>
-                          <TableCell
-                            sx={{
-                              width: "10px",
-                            }}
-                          >
-                            {answerNumber + 1}
-                          </TableCell>
-                          <TableCell component="th" scope="row">
-                            {answerRow.text}
-                          </TableCell>
-                          <TableCell>
-                            {answerRow.is_correct ? "Yes" : "No"}
-                          </TableCell>
-                        </TableRow>
+                        <AnswerRow
+                          key={answerRow.id}
+                          answerRow={answerRow}
+                          quizId={row.quiz_id}
+                          answerNumber={answerNumber}
+                        />
                       ))}
                     </TableBody>
                   </Table>
