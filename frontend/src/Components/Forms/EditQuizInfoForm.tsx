@@ -4,19 +4,29 @@ import {
   Checkbox,
   FormControlLabel,
   TextField,
+  Typography,
 } from "@mui/material";
-import { Quiz } from "../../logic/interfaces";
+import { Answer, Question, Quiz } from "../../logic/interfaces";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { deleteQuiz, updateQuiz } from "../../logic/quizzes";
 import { enqueueSnackbar } from "notistack";
 import { useConfirm } from "material-ui-confirm";
 import { useNavigate } from "react-router-dom";
+import { useCallback, useEffect, useState } from "react";
+import { getQuestionsForQuiz } from "../../logic/questions";
 
 const EditQuizInfoForm = (props: {
   quiz: Quiz;
   updateQuiz: (quiz: Quiz) => void;
 }) => {
+  const [questions, setQuestions] = useState<Question[]>([]);
+  const [canBePublished, setCanBePublished] = useState<boolean>(false);
+  const fetchQuestions = useCallback(async () => {
+    const response = await getQuestionsForQuiz(props.quiz.id);
+    setQuestions(response);
+  }, [props.quiz.id]);
+
   const confirm = useConfirm();
   const navigate = useNavigate();
   const handleEdit = async () => {
@@ -52,8 +62,30 @@ const EditQuizInfoForm = (props: {
       });
   };
 
+  useEffect(() => {
+    fetchQuestions();
+  }, [fetchQuestions]);
+
+  useEffect(() => {
+    const canBePublishedCheck =
+      questions.length > 0 &&
+      props.quiz.name &&
+      props.quiz.description &&
+      questions.every((question: Question) => question.answers.length > 0) &&
+      questions.every((question: Question) =>
+        question.answers.some((answer: Answer) => answer.is_correct),
+      );
+    setCanBePublished(canBePublishedCheck || false);
+  }, [questions, props.quiz.name, props.quiz.description]);
   return (
     <>
+      {!canBePublished && (
+        <Typography variant="subtitle1" color="error">
+          This quiz cannot be published yet. Please be sure to fill in all the
+          fields and add at least one question with at least one answer marked
+          as correct.
+        </Typography>
+      )}
       {props.quiz && (
         <Box
           sx={{
@@ -95,6 +127,7 @@ const EditQuizInfoForm = (props: {
                     is_public: event.target.checked,
                   })
                 }
+                disabled={!canBePublished}
               />
             }
             label="Public"

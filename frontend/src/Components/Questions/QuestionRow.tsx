@@ -127,6 +127,11 @@ const QuestionRow = (props: {
                       </IconButton>
                     </Grid>
                   </Grid>
+                  {!row.answers.some((answer) => answer.is_correct) && (
+                    <Typography variant="subtitle1" color="error">
+                      This question has no correct answer!
+                    </Typography>
+                  )}
                   <Table size="small" aria-label="purchases">
                     <TableHead>
                       <TableRow>
