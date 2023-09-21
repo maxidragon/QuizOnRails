@@ -6,7 +6,7 @@ export const getQuestionsForQuiz = async (quizId: number) => {
     const response = await backendRequest(
       `/quizzes/${quizId}/questions`,
       "GET",
-      true
+      true,
     );
     return await response.json();
   } catch (error) {
@@ -20,7 +20,7 @@ export const createQuestion = async (quizId: number, text: string) => {
       `/quizzes/${quizId}/questions`,
       "POST",
       true,
-      { text }
+      { text },
     );
     return await response.json();
   } catch (error) {
@@ -34,7 +34,7 @@ export const editQuestion = async (question: Question) => {
       `/quizzes/${question.quiz_id}/questions/${question.id}`,
       "PUT",
       true,
-      question
+      question,
     );
     return await response.json();
   } catch (error) {
@@ -47,7 +47,7 @@ export const deleteQuestion = async (quiz_id: number, question_id: number) => {
     const response = await backendRequest(
       `/quizzes/${quiz_id}/questions/${question_id}`,
       "DELETE",
-      true
+      true,
     );
     return await response.json();
   } catch (error) {
