@@ -31,19 +31,32 @@ class QuestionsController < ApplicationController
 
     def update
         question = Question.find(params[:id])
-        authorize_question
-        if question.update(question_params)
-            render json: question
+        if question.present? && question.quiz.user == current_user
+            question_params = params.require(:question).permit(:text)
+            if question.update(question_params)
+                render json: {
+                    question: question,
+                    status: :updated
+                }
+            else
+                render json: {error: question.errors.full_messages}, status: :unprocessable_entity
+            end
         else
-            render json: {error: question.errors.full_messages}, status: :unprocessable_entity
+            render json: {error: "Question not found"}, status: :not_found
         end
     end
 
     def destroy
         question = Question.find(params[:id])
-        authorize_question
-        question.destroy
-        render json: question
+        if question.present? && question.quiz.user == current_user
+            question.destroy
+            render json: {
+                question: question,
+                status: :deleted
+            }
+        else
+            render json: {error: "Question not found"}, status: :not_found
+        end
     end
 
 end

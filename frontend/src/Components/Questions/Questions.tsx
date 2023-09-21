@@ -23,7 +23,6 @@ const Questions = (props: { quizId: number }) => {
 
   const fetchQuestions = useCallback(async () => {
     const response = await getQuestionsForQuiz(props.quizId);
-    console.log(response);
     setQuestions(response);
   }, [props.quizId]);
 
@@ -68,17 +67,20 @@ const Questions = (props: { quizId: number }) => {
         <Table aria-label="collapsible table">
           <TableHead>
             <TableRow>
+              <TableCell />
               <TableCell>Answers</TableCell>
               <TableCell>Text</TableCell>
+              <TableCell>Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {questions &&
-              questions.map((question: Question) => (
+              questions.map((question: Question, i: number) => (
                 <QuestionRow
                   key={question.id}
                   row={question}
                   handleCloseCreateModal={handleCloseCreateModal}
+                  questionNumber={i + 1}
                 />
               ))}
           </TableBody>

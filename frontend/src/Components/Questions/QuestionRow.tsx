@@ -12,95 +12,167 @@ import {
   Grid,
 } from "@mui/material";
 import { Question } from "../../logic/interfaces";
+import { deleteQuestion } from "../../logic/questions";
+import { useConfirm } from "material-ui-confirm";
+import { enqueueSnackbar } from "notistack";
 import CreateAnswerModal from "../ModalComponents/Create/CreateAnswerModal";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import AddIcon from "@mui/icons-material/Add";
+import EditQuestionModal from "../ModalComponents/Edit/EditQuestionModal";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
+
 const QuestionRow = (props: {
   row: Question;
   handleCloseCreateModal: () => void;
+  questionNumber: number;
 }) => {
+  const confirm = useConfirm();
   const { row } = props;
+  const [hide, setHide] = useState<boolean>(false);
+  const [editedQuestion, setEditedQuestion] = useState<Question>(props.row);
   const [open, setOpen] = useState(false);
   const [openCreateModal, setOpenCreateModal] = useState<boolean>(false);
+  const [openEditQuestionModal, setOpenEditQuestionModal] =
+    useState<boolean>(false);
 
   const handleCloseCreateModal = async () => {
     setOpenCreateModal(false);
     props.handleCloseCreateModal();
   };
+
+  const handleDelete = async () => {
+    if (row === null) return;
+    confirm({
+      description:
+        "Are you sure you want to delete this question with all answers?",
+    })
+      .then(async () => {
+        const response = await deleteQuestion(row.quiz_id, row.id);
+        if (response.status === "deleted") {
+          enqueueSnackbar("Question deleted!", { variant: "success" });
+          setHide(true);
+        } else {
+          enqueueSnackbar("Something went wrong!", { variant: "error" });
+        }
+      })
+      .catch(() => {
+        enqueueSnackbar("Question not deleted!", { variant: "info" });
+      });
+  };
+
+  const updateQuestion = (question: Question) => {
+    setEditedQuestion(question);
+  };
+
   return (
     <>
-      <TableRow sx={{ "& > *": { borderBottom: "unset" } }}>
-        <TableCell
-          sx={{
-            width: "10px",
-          }}
-        >
-          <IconButton
-            aria-label="expand row"
-            size="small"
-            onClick={() => setOpen(!open)}
-          >
-            {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-          </IconButton>
-        </TableCell>
-        <TableCell component="th" scope="row">
-          {row.text}
-        </TableCell>
-      </TableRow>
-      <TableRow>
-        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
-          <Collapse in={open} timeout="auto" unmountOnExit>
-            <Box sx={{ margin: 1 }}>
-              <Grid
-                sx={{
-                  display: "flex",
-                  flexDirection: "row",
-                }}
+      {!hide && (
+        <>
+          <TableRow sx={{ "& > *": { borderBottom: "unset" } }}>
+            <TableCell
+              sx={{
+                width: "10px",
+              }}
+            >
+              {props.questionNumber}
+            </TableCell>
+            <TableCell
+              sx={{
+                width: "10px",
+              }}
+            >
+              <IconButton
+                aria-label="expand row"
+                size="small"
+                onClick={() => setOpen(!open)}
               >
-                <Grid item>
-                  <Typography variant="h6">Answers</Typography>
-                </Grid>
-                <Grid item>
-                  <IconButton
-                    aria-label="add question"
-                    size="small"
-                    onClick={() => setOpenCreateModal(true)}
+                {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+              </IconButton>
+            </TableCell>
+            <TableCell component="th" scope="row">
+              {editedQuestion.text}
+            </TableCell>
+            <TableCell>
+              <IconButton onClick={() => setOpenEditQuestionModal(true)}>
+                <EditIcon />
+              </IconButton>
+              <IconButton onClick={handleDelete}>
+                <DeleteIcon />
+              </IconButton>
+            </TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
+              <Collapse in={open} timeout="auto" unmountOnExit>
+                <Box sx={{ margin: 1 }}>
+                  <Grid
+                    sx={{
+                      display: "flex",
+                      flexDirection: "row",
+                    }}
                   >
-                    <AddIcon />
-                  </IconButton>
-                </Grid>
-              </Grid>
-              <Table size="small" aria-label="purchases">
-                <TableHead>
-                  <TableRow>
-                    <TableCell>Text</TableCell>
-                    <TableCell>Correct</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {row.answers.map((answerRow) => (
-                    <TableRow key={answerRow.id}>
-                      <TableCell component="th" scope="row">
-                        {answerRow.text}
-                      </TableCell>
-                      <TableCell>
-                        {answerRow.is_correct ? "Yes" : "No"}
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </Box>
-          </Collapse>
-        </TableCell>
-      </TableRow>
-      <CreateAnswerModal
-        open={openCreateModal}
-        handleClose={handleCloseCreateModal}
-        quizId={row.quiz_id}
-        questionId={row.id}
-      />
+                    <Grid item>
+                      <Typography variant="h6">Answers</Typography>
+                    </Grid>
+                    <Grid item>
+                      <IconButton
+                        aria-label="add question"
+                        size="small"
+                        onClick={() => setOpenCreateModal(true)}
+                      >
+                        <AddIcon />
+                      </IconButton>
+                    </Grid>
+                  </Grid>
+                  <Table size="small" aria-label="purchases">
+                    <TableHead>
+                      <TableRow>
+                        <TableCell />
+                        <TableCell>Text</TableCell>
+                        <TableCell>Correct</TableCell>
+                        <TableCell>Actions</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {row.answers.map((answerRow, answerNumber: number) => (
+                        <TableRow key={answerRow.id}>
+                          <TableCell
+                            sx={{
+                              width: "10px",
+                            }}
+                          >
+                            {answerNumber + 1}
+                          </TableCell>
+                          <TableCell component="th" scope="row">
+                            {answerRow.text}
+                          </TableCell>
+                          <TableCell>
+                            {answerRow.is_correct ? "Yes" : "No"}
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </Box>
+              </Collapse>
+            </TableCell>
+          </TableRow>
+          <CreateAnswerModal
+            open={openCreateModal}
+            handleClose={handleCloseCreateModal}
+            quizId={row.quiz_id}
+            questionId={row.id}
+          />
+          <EditQuestionModal
+            open={openEditQuestionModal}
+            handleClose={() => setOpenEditQuestionModal(false)}
+            question={editedQuestion}
+            updateQuestion={updateQuestion}
+          />
+        </>
+      )}
     </>
   );
 };
