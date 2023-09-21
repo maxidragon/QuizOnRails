@@ -7,9 +7,9 @@ class QuizzesController < ApplicationController
         per_page = params[:per_page] || 10 
       
         if params[:search] && params[:search] != ""
-          quizzes = Quiz.where("name LIKE ? OR description LIKE ?", "%#{params[:search]}%", "%#{params[:search]}%")
+          quizzes = Quiz.where("name LIKE ? OR description LIKE ?", "%#{params[:search]}%", "%#{params[:search]}%").where(is_public: true)
         else
-          quizzes = Quiz.all
+          quizzes = Quiz.where(is_public: true)
         end
       
         quizzes = quizzes.paginate(page: page, per_page: per_page)
@@ -27,7 +27,6 @@ class QuizzesController < ApplicationController
         quiz = Quiz.find(params[:id])
         render json: {
             quiz: quiz,
-            questions: quiz.questions,
             can_manage: quiz_belongs_to_current_user?(quiz)
         }
     end

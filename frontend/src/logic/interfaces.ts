@@ -9,14 +9,15 @@ export interface Quiz {
 
 export interface Question {
   id: number;
-  question: string;
+  quiz_id: number;
+  text: string;
   answers: Answer[];
 }
 
 export interface Answer {
   id: number;
-  answer: string;
-  isCorrect: boolean;
+  text: string;
+  is_correct: boolean;
 }
 
 export interface User {

@@ -1,17 +1,17 @@
 import { useState, useCallback, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { Question, Quiz } from "../../logic/interfaces";
+import { Quiz } from "../../logic/interfaces";
 import { getQuiz } from "../../logic/quizzes";
 import { CircularProgress, Grid, Typography } from "@mui/material";
 import { enqueueSnackbar } from "notistack";
 import EditQuizInfoForm from "../../Components/Forms/EditQuizInfoForm";
+import Questions from "../../Components/Questions/Questions";
 
 const ManageQuiz = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
 
   const [quiz, setQuiz] = useState<Quiz | null>(null);
-  const [questions, setQuestions] = useState<Question[]>();
 
   const fetchQuiz = useCallback(async () => {
     if (!id) return null;
@@ -22,16 +22,11 @@ const ManageQuiz = () => {
       navigate(`/error`);
     }
     setQuiz(response.quiz);
-    setQuestions(response.questions);
   }, [id, navigate]);
 
   useEffect(() => {
     fetchQuiz();
   }, [fetchQuiz]);
-
-  questions?.forEach((question) => {
-    console.log(question);
-  });
 
   const updateQuiz = (quiz: Quiz) => {
     setQuiz(quiz);
@@ -54,6 +49,9 @@ const ManageQuiz = () => {
           </Grid>
           <Grid item>
             <EditQuizInfoForm quiz={quiz} updateQuiz={updateQuiz} />
+          </Grid>
+          <Grid item>
+            <Questions quizId={quiz.id} />
           </Grid>
         </Grid>
       ) : (

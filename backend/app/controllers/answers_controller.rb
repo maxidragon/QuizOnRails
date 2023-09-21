@@ -12,20 +12,25 @@ class AnswersController < ApplicationController
     end
 
     def create
-        question = Question.find(params[:question_id], user: current_user)
-
+        question = Question.find_by(id: params[:question_id], quiz_id: params[:quiz_id])
+        
         if question.present?
-            answer = question.answers.build(answer_params)
-            authorize_answer
-            if answer.save
-                render json: answer
-            else
-                render json: {error: answer.errors.full_messages}, status: :unprocessable_entity
-            end
+          answer_params = params.require(:answer).permit(:text, :is_correct)
+          answer = question.answers.build(answer_params)
+      
+          if answer.save
+            render json: {
+              answer: answer,
+              status: :created
+            }
+          else
+            render json: { error: answer.errors.full_messages }, status: :unprocessable_entity
+          end
         else
-            render json: {error: "Question not found"}, status: :not_found
+          render json: { error: "Question not found" }, status: :not_found
         end
-    end
+      end
+      
 
     def update
         answer = Answer.find(params[:id])
