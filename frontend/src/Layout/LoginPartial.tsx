@@ -4,6 +4,7 @@ import { IconButton } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
 import { isUserLoggedIn, logout } from "../logic/auth";
 import SettingsIcon from "@mui/icons-material/Settings";
+import QuizIcon from "@mui/icons-material/Quiz";
 
 const LoginPartial = () => {
   const navigate = useNavigate();
@@ -22,6 +23,13 @@ const LoginPartial = () => {
             }}
           >
             <LogoutIcon fontSize="medium" />
+          </IconButton>
+          <IconButton
+            component={Link}
+            to={`/quizzes/my`}
+            rel="noopener noreferrer"
+          >
+            <QuizIcon sx={{ color: "#fff" }} fontSize="medium" />
           </IconButton>
           <IconButton
             component={Link}

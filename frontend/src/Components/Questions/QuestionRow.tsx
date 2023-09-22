@@ -148,6 +148,8 @@ const QuestionRow = (props: {
                           answerRow={answerRow}
                           quizId={row.quiz_id}
                           answerNumber={answerNumber}
+                          updateQuestion={updateQuestion}
+                          question={row}
                         />
                       ))}
                     </TableBody>

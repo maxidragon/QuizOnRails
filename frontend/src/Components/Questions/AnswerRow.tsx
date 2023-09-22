@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { TableRow, TableCell, IconButton } from "@mui/material";
-import { Answer } from "../../logic/interfaces";
+import { Answer, Question } from "../../logic/interfaces";
 import { useConfirm } from "material-ui-confirm";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -12,6 +12,8 @@ const AnswerRow = (props: {
   answerRow: Answer;
   answerNumber: number;
   quizId: number;
+  updateQuestion: (question: Question) => void;
+  question: Question;
 }) => {
   const confirm = useConfirm();
   const { answerRow } = props;
