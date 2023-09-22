@@ -18,6 +18,23 @@ export const getQuizzes = async (
   }
 };
 
+export const getMyQuizzes = async (
+  searchParam?: string,
+  pageParam: number = 1,
+  perPage: number = 10,
+) => {
+  try {
+    let url = "quizzes/my";
+    if (searchParam) {
+      url += `?search=${searchParam}&page=${pageParam}&per_page=${perPage}`;
+    }
+    const response = await backendRequest(url, "GET", true);
+    return await response.json();
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 export const createQuiz = async (name: string, description: string) => {
   try {
     const response = await backendRequest("quizzes", "POST", true, {

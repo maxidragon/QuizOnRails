@@ -2,6 +2,24 @@ class QuizzesController < ApplicationController
     before_action :authenticate_user!, except: [:index]
     before_action :set_quiz, only: [:update, :destroy]
 
+    def my
+        page = params[:page] || 1
+        per_page = params[:per_page] || 10
+        if params[:search] && params[:search] != ""
+            quizzes = current_user.quizzes.where("name LIKE ? OR description LIKE ?", "%#{params[:search]}%", "%#{params[:search]}%")
+        else
+            quizzes = current_user.quizzes
+        end
+        quizzes = quizzes.paginate(page: page, per_page: per_page)
+        total_pages = quizzes.total_pages
+        render json: {
+            quizzes: quizzes,
+            current_page: page.to_i,
+            total_pages: total_pages,
+            total_items: quizzes.total_entries
+        }
+    end
+
     def index
         page = params[:page] || 1
         per_page = params[:per_page] || 10 

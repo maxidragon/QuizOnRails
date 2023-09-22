@@ -9,6 +9,7 @@ import Login from "./Pages/Auth/Login/Login";
 import Home from "./Pages/Home/Home";
 import ManageQuiz from "./Pages/ManageQuiz/ManageQuiz";
 import ErrorElement from "./Pages/ErrorElement/ErrorElement";
+import MyQuizzes from "./Pages/MyQuizzes/MyQuizzes";
 
 const router = createHashRouter([
   {
@@ -26,6 +27,10 @@ const router = createHashRouter([
   {
     path: "/quiz/:id/manage",
     element: <Layout children={<ManageQuiz />} />,
+  },
+  {
+    path: "/quizzes/my",
+    element: <Layout children={<MyQuizzes />} />,
   },
   {
     path: "/error",

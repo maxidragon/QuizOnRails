@@ -9,6 +9,7 @@ Rails.application.routes.draw do
     registrations: 'users/registrations'
   }
   resources :quizzes do
+    get 'my' => 'quizzes#my', on: :collection
     resources :questions do
       resources :answers do 
         resources :user_answers
