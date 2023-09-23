@@ -26,8 +26,9 @@ import AnswerRow from "./AnswerRow";
 
 const QuestionRow = (props: {
   row: Question;
-  handleCloseCreateModal: () => void;
+  handleCreateAnswer: () => void;
   questionNumber: number;
+  isPublic: boolean;
 }) => {
   const confirm = useConfirm();
   const { row } = props;
@@ -40,7 +41,7 @@ const QuestionRow = (props: {
 
   const handleCloseCreateModal = async () => {
     setOpenCreateModal(false);
-    props.handleCloseCreateModal();
+    props.handleCreateAnswer();
   };
 
   const handleDelete = async () => {
@@ -96,10 +97,13 @@ const QuestionRow = (props: {
               {editedQuestion.text}
             </TableCell>
             <TableCell>
-              <IconButton onClick={() => setOpenEditQuestionModal(true)}>
+              <IconButton
+                onClick={() => setOpenEditQuestionModal(true)}
+                disabled={props.isPublic}
+              >
                 <EditIcon />
               </IconButton>
-              <IconButton onClick={handleDelete}>
+              <IconButton onClick={handleDelete} disabled={props.isPublic}>
                 <DeleteIcon />
               </IconButton>
             </TableCell>
@@ -122,6 +126,7 @@ const QuestionRow = (props: {
                         aria-label="add question"
                         size="small"
                         onClick={() => setOpenCreateModal(true)}
+                        disabled={props.isPublic}
                       >
                         <AddIcon />
                       </IconButton>
@@ -153,6 +158,7 @@ const QuestionRow = (props: {
                             answerNumber={answerNumber}
                             updateQuestion={updateQuestion}
                             question={editedQuestion}
+                            isPublic={props.isPublic}
                           />
                         ),
                       )}

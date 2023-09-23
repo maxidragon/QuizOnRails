@@ -46,12 +46,17 @@ const ManageQuiz = () => {
         >
           <Grid item>
             <Typography variant="h5">Manage quiz</Typography>
+            <Typography variant="body1" color="gray">
+              {quiz.is_public
+                ? "After publishing quiz you can't edit questions and answers anymore. You can only edit quiz info."
+                : "Here you can edit quiz info and questions."}
+            </Typography>
           </Grid>
           <Grid item>
             <EditQuizInfoForm quiz={quiz} updateQuiz={updateQuiz} />
           </Grid>
           <Grid item>
-            <Questions quizId={quiz.id} />
+            <Questions quizId={quiz.id} isPublic={quiz.is_public} />
           </Grid>
         </Grid>
       ) : (

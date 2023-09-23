@@ -14,6 +14,7 @@ const AnswerRow = (props: {
   quizId: number;
   updateQuestion: (question: Question) => void;
   question: Question;
+  isPublic: boolean;
 }) => {
   const confirm = useConfirm();
   const { answerRow } = props;
@@ -79,10 +80,11 @@ const AnswerRow = (props: {
                 onClick={() => {
                   setOpenEditAnswerModal(true);
                 }}
+                disabled={props.isPublic}
               >
                 <EditIcon />
               </IconButton>
-              <IconButton onClick={handleDelete}>
+              <IconButton onClick={handleDelete} disabled={props.isPublic}>
                 <DeleteIcon />
               </IconButton>
             </TableCell>

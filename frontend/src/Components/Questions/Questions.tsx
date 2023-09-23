@@ -17,7 +17,7 @@ import {
 import AddIcon from "@mui/icons-material/Add";
 import CreateQuestionModal from "../ModalComponents/Create/CreateQuestionModal";
 
-const Questions = (props: { quizId: number }) => {
+const Questions = (props: { quizId: number; isPublic: boolean }) => {
   const [questions, setQuestions] = useState<Question[]>([]);
   const [openCreateModal, setOpenCreateModal] = useState<boolean>(false);
 
@@ -32,6 +32,10 @@ const Questions = (props: { quizId: number }) => {
 
   const handleCloseCreateModal = async () => {
     setOpenCreateModal(false);
+    await fetchQuestions();
+  };
+
+  const handleCreateAnswer = async () => {
     await fetchQuestions();
   };
 
@@ -51,6 +55,7 @@ const Questions = (props: { quizId: number }) => {
             aria-label="add question"
             size="small"
             onClick={() => setOpenCreateModal(true)}
+            disabled={props.isPublic}
           >
             <AddIcon />
           </IconButton>
@@ -74,15 +79,15 @@ const Questions = (props: { quizId: number }) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {questions &&
-              questions.map((question: Question, i: number) => (
-                <QuestionRow
-                  key={question.id}
-                  row={question}
-                  handleCloseCreateModal={handleCloseCreateModal}
-                  questionNumber={i + 1}
-                />
-              ))}
+            {questions.map((question: Question, i: number) => (
+              <QuestionRow
+                key={question.id}
+                row={question}
+                handleCreateAnswer={handleCreateAnswer}
+                questionNumber={i + 1}
+                isPublic={props.isPublic}
+              />
+            ))}
           </TableBody>
         </Table>
       </TableContainer>

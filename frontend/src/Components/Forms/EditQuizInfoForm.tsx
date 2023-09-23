@@ -1,11 +1,4 @@
-import {
-  Box,
-  Button,
-  Checkbox,
-  FormControlLabel,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Box, Button, TextField, Typography } from "@mui/material";
 import { Answer, Question, Quiz } from "../../logic/interfaces";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -58,7 +51,27 @@ const EditQuizInfoForm = (props: {
         }
       })
       .catch(() => {
-        enqueueSnackbar("Quiz not deleted!", { variant: "error" });
+        enqueueSnackbar("Quiz not deleted!", { variant: "info" });
+      });
+  };
+
+  const handlePublish = async () => {
+    confirm({
+      description:
+        "Are you sure you want to publish this quiz? Once published, it cannot be edited.",
+    })
+      .then(async () => {
+        props.updateQuiz({ ...props.quiz, is_public: true });
+        const response = await updateQuiz({ ...props.quiz, is_public: true });
+        if (response.status === "updated") {
+          enqueueSnackbar("Quiz published!", { variant: "success" });
+        }
+        if (response.error) {
+          enqueueSnackbar("Something went wrong!", { variant: "error" });
+        }
+      })
+      .catch(() => {
+        enqueueSnackbar("Quiz not published!", { variant: "info" });
       });
   };
 
@@ -117,28 +130,21 @@ const EditQuizInfoForm = (props: {
               })
             }
           />
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={props.quiz.is_public}
-                onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-                  props.updateQuiz({
-                    ...props.quiz,
-                    is_public: event.target.checked,
-                  })
-                }
-                disabled={!canBePublished}
-              />
-            }
-            label="Public"
-          />
           <Box sx={{ display: "flex", justifyContent: "end", mt: 2 }}>
+            <Button
+              variant="contained"
+              color="success"
+              disabled={!canBePublished || props.quiz.is_public}
+              onClick={handlePublish}
+            >
+              Publish
+            </Button>
             <Button
               variant="contained"
               endIcon={<EditIcon />}
               onClick={handleEdit}
             >
-              Edit
+              Save
             </Button>
             <Button
               variant="contained"

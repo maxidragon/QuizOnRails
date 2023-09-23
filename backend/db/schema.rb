@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_09_20_154155) do
+ActiveRecord::Schema[7.0].define(version: 2023_09_23_163558) do
   create_table "answers", force: :cascade do |t|
     t.string "text"
     t.boolean "is_correct"
@@ -28,6 +28,16 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_20_154155) do
     t.index ["quiz_id"], name: "index_questions_on_quiz_id"
   end
 
+  create_table "quiz_attempts", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.integer "quiz_id", null: false
+    t.datetime "started_at"
+    t.datetime "finished_at"
+    t.boolean "is_active", default: true, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "quizzes", force: :cascade do |t|
     t.string "name"
     t.integer "user_id", null: false
@@ -39,12 +49,12 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_20_154155) do
   end
 
   create_table "user_answers", force: :cascade do |t|
-    t.integer "user_id", null: false
+    t.integer "quiz_attempt_id", null: false
     t.integer "answer_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["answer_id"], name: "index_user_answers_on_answer_id"
-    t.index ["user_id"], name: "index_user_answers_on_user_id"
+    t.index ["quiz_attempt_id"], name: "index_user_answers_on_quiz_attempt_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -64,7 +74,10 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_20_154155) do
 
   add_foreign_key "answers", "questions"
   add_foreign_key "questions", "quizzes"
+  add_foreign_key "quiz_attempts", "quizzes"
+  add_foreign_key "quiz_attempts", "users"
   add_foreign_key "quizzes", "users"
   add_foreign_key "user_answers", "answers"
-  add_foreign_key "user_answers", "users"
+  add_foreign_key "user_answers", "quiz_attempts"
+  add_foreign_key "user_answers", "users", column: "quiz_attempt_id"
 end
