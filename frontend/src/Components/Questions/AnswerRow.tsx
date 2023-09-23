@@ -47,6 +47,15 @@ const AnswerRow = (props: {
 
   const updateAnswer = (answer: Answer) => {
     setEditedAnswer(answer);
+    props.updateQuestion({
+      ...props.question,
+      answers: props.question.answers.map((a) => {
+        if (a.id === answer.id) {
+          return answer;
+        }
+        return a;
+      }),
+    });
   };
 
   return (

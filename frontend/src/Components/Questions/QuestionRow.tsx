@@ -127,7 +127,9 @@ const QuestionRow = (props: {
                       </IconButton>
                     </Grid>
                   </Grid>
-                  {!row.answers.some((answer) => answer.is_correct) && (
+                  {!editedQuestion.answers.some(
+                    (answer) => answer.is_correct,
+                  ) && (
                     <Typography variant="subtitle1" color="error">
                       This question has no correct answer!
                     </Typography>
@@ -142,16 +144,18 @@ const QuestionRow = (props: {
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {row.answers.map((answerRow, answerNumber: number) => (
-                        <AnswerRow
-                          key={answerRow.id}
-                          answerRow={answerRow}
-                          quizId={row.quiz_id}
-                          answerNumber={answerNumber}
-                          updateQuestion={updateQuestion}
-                          question={row}
-                        />
-                      ))}
+                      {editedQuestion.answers.map(
+                        (answerRow, answerNumber: number) => (
+                          <AnswerRow
+                            key={answerRow.id}
+                            answerRow={answerRow}
+                            quizId={row.quiz_id}
+                            answerNumber={answerNumber}
+                            updateQuestion={updateQuestion}
+                            question={editedQuestion}
+                          />
+                        ),
+                      )}
                     </TableBody>
                   </Table>
                 </Box>
