@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_09_23_163558) do
+ActiveRecord::Schema[7.0].define(version: 2023_09_23_195821) do
   create_table "answers", force: :cascade do |t|
     t.string "text"
     t.boolean "is_correct"
@@ -79,5 +79,4 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_23_163558) do
   add_foreign_key "quizzes", "users"
   add_foreign_key "user_answers", "answers"
   add_foreign_key "user_answers", "quiz_attempts"
-  add_foreign_key "user_answers", "users", column: "quiz_attempt_id"
 end

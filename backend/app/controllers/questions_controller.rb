@@ -2,13 +2,23 @@ class QuestionsController < ApplicationController
     before_action :authenticate_user!
 
     def index
-        questions = Question.where(quiz_id: params[:quiz_id]).includes(:answers)
-        render json: questions.to_json(include: :answers)
+        quiz = Quiz.find_by(id: params[:quiz_id])
+        if quiz.present? && quiz.user == current_user
+            questions = Question.where(quiz_id: params[:quiz_id]).includes(:answers)
+            render json: questions.to_json(include: :answers)
+        else
+            render json: {error: "Quiz not found"}, status: :not_found
+        end
     end
 
     def show
-        question = Question.find(params[:id])
-        render json: question
+        quiz = Quiz.find_by(id: params[:quiz_id])
+        if quiz.present? && quiz.user == current_user
+            question = Question.find(params[:id])
+            render json: question
+        else
+            render json: {error: "Question not found"}, status: :not_found
+        end
     end
 
     def create

@@ -21,6 +21,12 @@ export interface Answer {
   question_id: number;
 }
 
+export interface PublicAnswer {
+  id: number;
+  text: string;
+  question_id: number;
+}
+
 export interface User {
   id: number;
   name: string;
@@ -28,8 +34,20 @@ export interface User {
   password: string;
 }
 
-export interface UserAnswer {
+export interface PlayQuiz {
   id: number;
-  questionId: number;
-  answerId: number;
+  user_id: number;
+  quiz_id: number;
+  created_at: string;
+  updated_at: string;
+  questions: PlayQuestion[];
+}
+
+export interface PlayQuestion {
+  id: number;
+  text: string;
+  question_id: number;
+  created_at: string;
+  updated_at: string;
+  answers: PublicAnswer[];
 }
