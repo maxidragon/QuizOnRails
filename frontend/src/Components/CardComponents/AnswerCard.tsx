@@ -6,16 +6,16 @@ import { enqueueSnackbar } from "notistack";
 const AnswerCard = (props: {
   answer: PublicAnswer;
   quizId: number;
-  handleSubmitAnswer: () => void;
+  handleSubmitAnswer: (id: number) => void;
+  isPreviouslySelected: boolean;
 }) => {
   const handleSubmit = async () => {
     const response = await submitAnswer(props.quizId, props.answer.id);
     if (response.id) {
-      props.handleSubmitAnswer();
+      props.handleSubmitAnswer(props.answer.id);
     } else {
       enqueueSnackbar("Something went wrong", { variant: "error" });
     }
-    props.handleSubmitAnswer();
   };
   return (
     <Card
@@ -26,7 +26,14 @@ const AnswerCard = (props: {
         cursor: "pointer",
       }}
     >
-      <CardContent sx={{ mt: 2, display: "flex", flexDirection: "column" }}>
+      <CardContent
+        sx={{
+          mt: 2,
+          display: "flex",
+          flexDirection: "column",
+          border: props.isPreviouslySelected ? 2 : 0,
+        }}
+      >
         <Typography
           sx={{
             fontSize: 20,

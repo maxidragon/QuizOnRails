@@ -1,9 +1,9 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Button, Grid, Typography } from "@mui/material";
 import AnswerCard from "../../Components/CardComponents/AnswerCard";
-import { PlayQuestion, PlayQuiz } from "../../logic/interfaces";
-import { getInfo, startQuiz } from "../../logic/solvingQuiz";
+import { PlayAnswer, PlayQuestion, PlayQuiz } from "../../logic/interfaces";
+import { getAnswers, getInfo, startQuiz } from "../../logic/solvingQuiz";
 
 const Play = () => {
   const { id } = useParams<{ id: string }>();
@@ -12,6 +12,36 @@ const Play = () => {
     id: 0,
     number: 0,
   });
+  const [answers, setAnswers] = useState<PlayAnswer[]>([]);
+
+  const getUserAnswers = useCallback(async () => {
+    if (!id) return;
+    const data = await getAnswers(+id);
+    setAnswers(data);
+  }, [id]);
+
+  const handleSubmitAnswer = (id: number) => {
+    //TODO
+    //last question
+    if (currentQuestion.number === quiz?.questions.length) {
+      return;
+    }
+    const newAnswers = [...answers];
+    const foundIndex = newAnswers.findIndex(
+      (obj) => obj.question_id === currentQuestion.id,
+    );
+
+    if (foundIndex !== -1) {
+      newAnswers[foundIndex].answer_id = id;
+    } else {
+      newAnswers.push({ answer_id: id, question_id: currentQuestion.id });
+    }
+    setAnswers(newAnswers);
+    setCurrentQuestion({
+      id: quiz?.questions[currentQuestion.number].id || 0,
+      number: currentQuestion.number + 1,
+    });
+  };
 
   useEffect(() => {
     if (!id) return;
@@ -26,19 +56,9 @@ const Play = () => {
       console.log(response);
     };
     handleStartQuiz();
-  }, [id]);
+    getUserAnswers();
+  }, [id, getUserAnswers]);
 
-  const handleSubmitAnswer = () => {
-    //TODO
-    //last question
-    if (currentQuestion.number === quiz?.questions.length) {
-      return;
-    }
-    setCurrentQuestion({
-      id: quiz?.questions[currentQuestion.number].id || 0,
-      number: currentQuestion.number + 1,
-    });
-  };
   return (
     <>
       {quiz && (
@@ -99,6 +119,7 @@ const Play = () => {
             sx={{
               display: "flex",
               flexDirection: "row",
+              flexWrap: "wrap",
               justifyContent: "center",
             }}
           >
@@ -109,6 +130,9 @@ const Play = () => {
                   answer={answer}
                   quizId={quiz.id}
                   handleSubmitAnswer={handleSubmitAnswer}
+                  isPreviouslySelected={answers.some(
+                    (a) => a.answer_id === answer.id,
+                  )}
                 />
               ))}
           </Grid>

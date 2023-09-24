@@ -51,3 +51,8 @@ export interface PlayQuestion {
   updated_at: string;
   answers: PublicAnswer[];
 }
+
+export interface PlayAnswer {
+  question_id: number;
+  answer_id: number;
+}

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_09_23_195821) do
+ActiveRecord::Schema[7.0].define(version: 2023_09_24_140318) do
   create_table "answers", force: :cascade do |t|
     t.string "text"
     t.boolean "is_correct"
@@ -36,6 +36,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_23_195821) do
     t.boolean "is_active", default: true, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "score"
   end
 
   create_table "quizzes", force: :cascade do |t|
