@@ -137,4 +137,34 @@ RSpec.describe QuizzesController, type: :controller do
       end
     end
   end
+
+  describe "GET #stats" do
+    context "when the quiz exists and belongs to the user" do
+      it "returns a successful response" do
+        quiz = FactoryBot.create(:quiz)
+        sign_in quiz.user
+        get :stats, params: { id: quiz.id }
+        expect(response).to have_http_status(:success)
+      end
+    end
+
+    context "when the quiz exists but does not belong to the user" do
+      it "returns not found" do
+        user = create(:user)
+        another_user = create(:user)
+        sign_in another_user
+        another_quiz = create(:quiz, user: user)
+        get :stats, params: { id: another_quiz.id }
+        expect(response).to have_http_status(:not_found)
+      end
+    end
+
+    context "when the quiz does not exist" do
+      it "returns a not_found response" do
+        sign_in create(:user)
+        get :stats, params: { id: 9999 }
+        expect(response).to have_http_status(:not_found)
+      end
+    end
+  end
 end

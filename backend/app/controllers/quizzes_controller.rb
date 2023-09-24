@@ -56,6 +56,24 @@ class QuizzesController < ApplicationController
     end
   end
 
+  def stats
+    begin
+      quiz = Quiz.find(params[:id])
+      if quiz.present? && quiz.user == current_user
+        total_answers = quiz.quiz_attempts.count
+        average_result = quiz.quiz_attempts.average(:score).to_f.round(2)
+        render json: {
+                 total_answers: total_answers,
+                 average_result: average_result,
+               }
+      else
+        render json: { error: "Quiz not found" }, status: :not_found
+      end
+    rescue ActiveRecord::RecordNotFound
+      render json: { error: "Quiz not found" }, status: :not_found
+    end
+  end
+
   def create
     quiz_params = params.require(:quiz).permit(:name, :description)
     quiz = current_user.quizzes.build(quiz_params)

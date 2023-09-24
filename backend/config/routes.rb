@@ -10,6 +10,7 @@ Rails.application.routes.draw do
                      }
   resources :quizzes do
     get "my" => "quizzes#my", on: :collection
+    get "stats" => "quizzes#stats", on: :member
     resources :questions do
       resources :answers, only: [:create, :update, :destroy]
     end
