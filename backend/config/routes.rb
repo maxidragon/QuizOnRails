@@ -11,7 +11,7 @@ Rails.application.routes.draw do
   resources :quizzes do
     get "my" => "quizzes#my", on: :collection
     resources :questions do
-      resources :answers
+      resources :answers, only: [:create, :update, :destroy]
     end
   end
 

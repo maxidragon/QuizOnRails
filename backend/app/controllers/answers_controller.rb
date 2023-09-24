@@ -1,16 +1,6 @@
 class AnswersController < ApplicationController
   before_action :authenticate_user!
 
-  def index
-    answers = Answer.find(params[:question_id])
-    render json: answers
-  end
-
-  def show
-    answer = Answer.find(params[:id])
-    render json: answer
-  end
-
   def create
     question = Question.find_by(id: params[:question_id], quiz_id: params[:quiz_id])
 
@@ -22,7 +12,7 @@ class AnswersController < ApplicationController
         render json: {
                  answer: answer,
                  status: :created,
-               }
+               }, status: :created
       else
         render json: { error: answer.errors.full_messages }, status: :unprocessable_entity
       end
