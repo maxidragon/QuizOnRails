@@ -35,9 +35,9 @@ class SolvingQuizController < ApplicationController
     quiz = Quiz.find(params[:quiz_id])
     quiz_attempt = quiz.quiz_attempts.find_by(user_id: current_user.id, is_active: true, quiz_id: quiz.id)
     if !quiz_attempt || quiz_attempt.user_id != current_user.id
-        render json: { error: "You have not started this quiz" }, status: :unprocessable_entity
-        return
-      end
+      render json: { error: "You have not started this quiz" }, status: :unprocessable_entity
+      return
+    end
     user_answers = quiz_attempt.user_answers
     render json: user_answers.as_json(
       include: {
@@ -79,8 +79,8 @@ class SolvingQuizController < ApplicationController
     quiz = Quiz.find(params[:quiz_id])
     quiz_attempt = quiz.quiz_attempts.find_by(user_id: current_user.id, is_active: true, quiz_id: quiz.id)
     if !quiz_attempt || quiz_attempt.user_id != current_user.id
-        render json: { error: "You have not started this quiz" }, status: :unprocessable_entity
-        return
+      render json: { error: "You have not started this quiz" }, status: :unprocessable_entity
+      return
     end
     quiz_attempt.score = 0
 
@@ -99,12 +99,12 @@ class SolvingQuizController < ApplicationController
   def get_results
     quiz_attempt = QuizAttempt.find(params[:quiz_attempt_id])
     if quiz_attempt.user_id != current_user.id
-        render json: { error: "You are not allowed to see this quiz attempt" }, status: :unprocessable_entity
-        return
+      render json: { error: "You are not allowed to see this quiz attempt" }, status: :unprocessable_entity
+      return
     end
     render json: {
-        score: quiz_attempt.score,
-        quiz: quiz_attempt.quiz,
+      score: quiz_attempt.score,
+      quiz: quiz_attempt.quiz,
     }
   end
 end
