@@ -62,4 +62,9 @@ The server will be accessible at localhost:3000
 ```
 npm test
 ```
+
+- Backend tests (you must be in backend directory)
+```
+bundle exec rspec
+```
   
