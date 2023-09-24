@@ -18,6 +18,7 @@ Rails.application.routes.draw do
   get "quizzes/:quiz_id/start" => "solving_quiz#start_quiz"
   get "quizzes/:quiz_id/info" => "solving_quiz#get_info_with_questions"
   get "quizzes/:quiz_id/answers" => "solving_quiz#get_answers"
+  get "quizzes/:quiz_attempt_id/results" => "solving_quiz#get_results"
   post "quizzes/:quiz_id/submit" => "solving_quiz#submit_answer"
   post "quizzes/:quiz_id/finish" => "solving_quiz#finish_quiz"
 end

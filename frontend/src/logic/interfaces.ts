@@ -56,3 +56,8 @@ export interface PlayAnswer {
   question_id: number;
   answer_id: number;
 }
+
+export interface QuizResult {
+  score: number;
+  quiz: Quiz;
+}

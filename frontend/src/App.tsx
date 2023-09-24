@@ -11,6 +11,7 @@ import ManageQuiz from "./Pages/ManageQuiz/ManageQuiz";
 import ErrorElement from "./Pages/ErrorElement/ErrorElement";
 import MyQuizzes from "./Pages/MyQuizzes/MyQuizzes";
 import Play from "./Pages/Play/Play";
+import QuizResult from "./Pages/QuizResult/QuizResult";
 
 const router = createHashRouter([
   {
@@ -24,6 +25,10 @@ const router = createHashRouter([
   {
     path: "/auth/register",
     element: <Register />,
+  },
+  {
+    path: "/quiz/attempt/:quizAttemptId/result",
+    element: <Layout children={<QuizResult />} />,
   },
   {
     path: "quiz/:id",

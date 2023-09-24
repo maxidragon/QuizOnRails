@@ -33,7 +33,12 @@ class SolvingQuizController < ApplicationController
 
   def get_answers
     quiz = Quiz.find(params[:quiz_id])
-    user_answers = quiz.quiz_attempts.find_by(user_id: current_user.id, is_active: true, quiz_id: quiz.id).user_answers
+    quiz_attempt = quiz.quiz_attempts.find_by(user_id: current_user.id, is_active: true, quiz_id: quiz.id)
+    if !quiz_attempt || quiz_attempt.user_id != current_user.id
+        render json: { error: "You have not started this quiz" }, status: :unprocessable_entity
+        return
+      end
+    user_answers = quiz_attempt.user_answers
     render json: user_answers.as_json(
       include: {
         answer: {
@@ -46,7 +51,7 @@ class SolvingQuizController < ApplicationController
   def submit_answer
     quiz = Quiz.find(params[:quiz_id])
     quiz_attempt = quiz.quiz_attempts.find_by(user_id: current_user.id, is_active: true, quiz_id: quiz.id)
-    if !quiz_attempt
+    if !quiz_attempt || quiz_attempt.user_id != current_user.id
       render json: { error: "You have not started this quiz" }, status: :unprocessable_entity
       return
     end
@@ -71,15 +76,35 @@ class SolvingQuizController < ApplicationController
   end
 
   def finish_quiz
-    quiz_attempt = QuizAttempt.find(params[:quiz_attempt_id])
+    quiz = Quiz.find(params[:quiz_id])
+    quiz_attempt = quiz.quiz_attempts.find_by(user_id: current_user.id, is_active: true, quiz_id: quiz.id)
+    if !quiz_attempt || quiz_attempt.user_id != current_user.id
+        render json: { error: "You have not started this quiz" }, status: :unprocessable_entity
+        return
+    end
+    quiz_attempt.score = 0
+
     quiz_attempt.user_answers.each do |user_answer|
-      if user_answer.answer.correct
+      if user_answer.answer.is_correct
         quiz_attempt.score += 1
       end
     end
+    quiz_attempt.score = (quiz_attempt.score * 100) / quiz_attempt.quiz.questions.count
     quiz_attempt.is_active = false
     quiz_attempt.finished_at = DateTime.now
     quiz_attempt.save
     render json: quiz_attempt
+  end
+
+  def get_results
+    quiz_attempt = QuizAttempt.find(params[:quiz_attempt_id])
+    if quiz_attempt.user_id != current_user.id
+        render json: { error: "You are not allowed to see this quiz attempt" }, status: :unprocessable_entity
+        return
+    end
+    render json: {
+        score: quiz_attempt.score,
+        quiz: quiz_attempt.quiz,
+    }
   end
 end

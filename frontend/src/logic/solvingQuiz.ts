@@ -73,3 +73,29 @@ export const getAnswers = async (quiz_id: number) => {
     console.log(error);
   }
 };
+
+export const finishQuiz = async (quiz_id: number) => {
+  try {
+    const response = await backendRequest(
+      `/quizzes/${quiz_id}/finish`,
+      "POST",
+      true,
+    );
+    return await response.json();
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getResults = async (quiz_attempt_id: number) => {
+  try {
+    const response = await backendRequest(
+      `/quizzes/${quiz_attempt_id}/results`,
+      "GET",
+      true,
+    );
+    return await response.json();
+  } catch (error) {
+    console.log(error);
+  }
+};

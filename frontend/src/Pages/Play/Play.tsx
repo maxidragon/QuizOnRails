@@ -1,12 +1,20 @@
 import { useCallback, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Button, Grid, Typography } from "@mui/material";
 import AnswerCard from "../../Components/CardComponents/AnswerCard";
 import { PlayAnswer, PlayQuestion, PlayQuiz } from "../../logic/interfaces";
-import { getAnswers, getInfo, startQuiz } from "../../logic/solvingQuiz";
+import {
+  finishQuiz,
+  getAnswers,
+  getInfo,
+  startQuiz,
+} from "../../logic/solvingQuiz";
+import { useConfirm } from "material-ui-confirm";
 
 const Play = () => {
   const { id } = useParams<{ id: string }>();
+  const confirm = useConfirm();
+  const navigate = useNavigate();
   const [quiz, setQuiz] = useState<PlayQuiz | null>(null);
   const [currentQuestion, setCurrentQuestion] = useState({
     id: 0,
@@ -21,10 +29,8 @@ const Play = () => {
   }, [id]);
 
   const handleSubmitAnswer = (id: number) => {
-    //TODO
-    //last question
     if (currentQuestion.number === quiz?.questions.length) {
-      return;
+      handleSubmitQuiz();
     }
     const newAnswers = [...answers];
     const foundIndex = newAnswers.findIndex(
@@ -40,6 +46,15 @@ const Play = () => {
     setCurrentQuestion({
       id: quiz?.questions[currentQuestion.number].id || 0,
       number: currentQuestion.number + 1,
+    });
+  };
+  const handleSubmitQuiz = () => {
+    if (!id) return;
+    confirm({
+      description: "Are you sure you want to finish this quiz?",
+    }).then(async () => {
+      const data = await finishQuiz(+id);
+      navigate(`/quiz/attempt/${data.id}/result`);
     });
   };
 
@@ -67,6 +82,7 @@ const Play = () => {
           spacing={2}
           sx={{
             mt: 2,
+            mb: 2,
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
@@ -135,6 +151,15 @@ const Play = () => {
                   )}
                 />
               ))}
+          </Grid>
+          <Grid item>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleSubmitQuiz}
+            >
+              Finish
+            </Button>
           </Grid>
         </Grid>
       )}
