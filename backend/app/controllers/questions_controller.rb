@@ -30,7 +30,7 @@ class QuestionsController < ApplicationController
         render json: {
                  question: question,
                  status: :created,
-               }
+               }, status: :created
       else
         render json: { error: question.errors.full_messages }, status: :unprocessable_entity
       end

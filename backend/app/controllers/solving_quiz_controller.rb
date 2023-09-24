@@ -89,7 +89,9 @@ class SolvingQuizController < ApplicationController
         quiz_attempt.score += 1
       end
     end
-    quiz_attempt.score = (quiz_attempt.score * 100) / quiz_attempt.quiz.questions.count
+    if quiz_attempt.score > 0
+      quiz_attempt.score = (quiz_attempt.score * 100) / quiz_attempt.quiz.questions.count
+    end
     quiz_attempt.is_active = false
     quiz_attempt.finished_at = DateTime.now
     quiz_attempt.save
