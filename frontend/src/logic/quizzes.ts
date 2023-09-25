@@ -82,3 +82,16 @@ export const deleteQuiz = async (id: number) => {
     console.log(error);
   }
 };
+
+export const getQuizStats = async (quizId: number) => {
+  try {
+    const response = await backendRequest(
+      `quizzes/${quizId}/stats`,
+      "GET",
+      true,
+    );
+    return await response.json();
+  } catch (error) {
+    console.log(error);
+  }
+};

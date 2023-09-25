@@ -61,3 +61,8 @@ export interface QuizResult {
   score: number;
   quiz: Quiz;
 }
+
+export interface QuizStats {
+  total_answers: number;
+  average_result: number;
+}

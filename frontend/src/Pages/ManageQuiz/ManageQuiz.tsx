@@ -1,7 +1,7 @@
 import { useState, useCallback, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { Quiz } from "../../logic/interfaces";
-import { getQuiz } from "../../logic/quizzes";
+import { Quiz, QuizStats } from "../../logic/interfaces";
+import { getQuiz, getQuizStats } from "../../logic/quizzes";
 import { CircularProgress, Grid, Typography } from "@mui/material";
 import { enqueueSnackbar } from "notistack";
 import EditQuizInfoForm from "../../Components/Forms/EditQuizInfoForm";
@@ -12,15 +12,17 @@ const ManageQuiz = () => {
   const navigate = useNavigate();
 
   const [quiz, setQuiz] = useState<Quiz | null>(null);
+  const [stats, setStats] = useState<QuizStats | null>(null);
 
   const fetchQuiz = useCallback(async () => {
     if (!id) return null;
     const response = await getQuiz(+id);
-    console.log(response);
     if (!response.can_manage) {
       enqueueSnackbar("You can't manage this quiz!", { variant: "error" });
       navigate(`/error`);
     }
+    const statsResponse = await getQuizStats(+id);
+    setStats(statsResponse);
     setQuiz(response.quiz);
   }, [id, navigate]);
 
@@ -39,7 +41,7 @@ const ManageQuiz = () => {
           sx={{
             display: "flex",
             flexDirection: "column",
-            gap: 0.5,
+            gap: 2,
             ml: 10,
             mt: 2,
           }}
@@ -57,6 +59,15 @@ const ManageQuiz = () => {
           </Grid>
           <Grid item>
             <Questions quizId={quiz.id} isPublic={quiz.is_public} />
+          </Grid>
+          <Grid item>
+            <Typography variant="h5">Quiz stats</Typography>
+            <Typography variant="body1">
+              Number of solutions: {stats?.total_answers}
+            </Typography>
+            <Typography variant="body1">
+              Average result: {stats?.average_result}%
+            </Typography>
           </Grid>
         </Grid>
       ) : (
