@@ -36,7 +36,7 @@ const Questions = (props: { quizId: number; isPublic: boolean }) => {
   };
 
   const handleCreateAnswer = async () => {
-    await fetchQuestions();
+    await fetchQuestions(); 
   };
 
   return (

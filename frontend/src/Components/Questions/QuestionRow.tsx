@@ -149,7 +149,7 @@ const QuestionRow = (props: {
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {editedQuestion.answers.map(
+                      {row.answers.map(
                         (answerRow, answerNumber: number) => (
                           <AnswerRow
                             key={answerRow.id}
