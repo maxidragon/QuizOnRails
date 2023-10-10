@@ -149,19 +149,17 @@ const QuestionRow = (props: {
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {row.answers.map(
-                        (answerRow, answerNumber: number) => (
-                          <AnswerRow
-                            key={answerRow.id}
-                            answerRow={answerRow}
-                            quizId={row.quiz_id}
-                            answerNumber={answerNumber}
-                            updateQuestion={updateQuestion}
-                            question={editedQuestion}
-                            isPublic={props.isPublic}
-                          />
-                        ),
-                      )}
+                      {row.answers.map((answerRow, answerNumber: number) => (
+                        <AnswerRow
+                          key={answerRow.id}
+                          answerRow={answerRow}
+                          quizId={row.quiz_id}
+                          answerNumber={answerNumber}
+                          updateQuestion={updateQuestion}
+                          question={editedQuestion}
+                          isPublic={props.isPublic}
+                        />
+                      ))}
                     </TableBody>
                   </Table>
                 </Box>
