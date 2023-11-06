@@ -229,7 +229,7 @@ GEM
       rspec-support (~> 3.12)
     rspec-support (3.12.1)
     ruby2_keywords (0.0.5)
-    sqlite3 (1.6.7-x86_64-linux)
+    sqlite3 (1.6.8-x86_64-linux)
     stringio (3.0.8)
     thor (1.2.2)
     timeout (0.4.0)
